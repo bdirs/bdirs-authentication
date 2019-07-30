@@ -6,7 +6,10 @@
   "author": "muhwezi deo <aggrey256@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "tsc && node dist/index.js"
+    "start:dev": "tsc && node dist/index.js",
+    "start":"node dist/index.js",
+    "heroku-prebuild": "yarn install",
+    "heroku-postbuild": "tsc && yarn start"
   },
   "devDependencies": {
     "@types/express": "^4.17.0",
@@ -15,5 +18,8 @@
   },
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "engines": {
+    "yarn": "1.x"
   }
 }
