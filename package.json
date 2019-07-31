@@ -9,17 +9,23 @@
     "start": "node dist/index.js",
     "start:dev": "ts-node src/index.ts",
     "heroku-prebuild": "yarn install",
-    "heroku-postbuild": "yarn tsc"
+    "heroku-postbuild": "yarn tsc",
+    "test": "jest --detectOpenHandles"
   },
   "devDependencies": {
     "@types/express": "^4.17.0",
+    "@types/jest": "^24.0.16",
+    "@types/supertest": "^2.0.8",
+    "jest": "^24.8.0",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
-    "typescript": "^3.5.3",
-    "ts-node": "^8.3.0"
+    "typescript": "^3.5.3"
   },
   "dependencies": {
-    "express": "^4.17.1",
     "@types/express": "^4.17.0",
+    "express": "^4.17.1",
     "typescript": "^3.5.3"
   },
   "engines": {
