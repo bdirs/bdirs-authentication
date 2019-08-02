@@ -17,6 +17,9 @@
   <a href="https://codeclimate.com/github/bdirs/bdirs-web-api/maintainability">
     <img src="https://api.codeclimate.com/v1/badges/dd505402cbc0e3afdcf9/maintainability" />
   </a>
+  <a href="https://circleci.com/gh/bdirs">
+    <img src="https://circleci.com/gh/bdirs/bdirs-web-api.svg?style=svg" />
+  </a>
 </p>
 
 ###### Background
