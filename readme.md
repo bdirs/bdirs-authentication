@@ -18,7 +18,10 @@
     <img src="https://api.codeclimate.com/v1/badges/dd505402cbc0e3afdcf9/maintainability" />
   </a>
   <a href="https://travis-ci.org/bdirs/bdirs-web-api">
-  <img src="https://travis-ci.org/bdirs/bdirs-web-api.svg?branch=develop">
+  <img src="https://travis-ci.org/bdirs/bdirs-web-api.svg?branch=develop" />
+  </a>
+  <a href="https://codeclimate.com/github/bdirs/bdirs-web-api/test_coverage">
+  <img src="https://api.codeclimate.com/v1/badges/dd505402cbc0e3afdcf9/test_coverage" />
   </a>
 </p>
 
