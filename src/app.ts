@@ -10,10 +10,9 @@ Sentry.init({
 });
 
 app.use("/", (req: Request, res: Response) => {
-
-    return res.json({
-        message: "Welcome To BDIRS",
-    });
+  return res.json({
+      message: "Welcome To BDIRS",
+  });
 });
 
 export default app;
