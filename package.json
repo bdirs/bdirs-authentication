@@ -8,8 +8,9 @@
   "scripts": {
     "start": "node dist/index.js",
     "start:dev": "ts-node src/index.ts",
-    "heroku-prebuild": "yarn install",
+    "heroku-prebuild": "yarn install && yarn db:migrate",
     "heroku-postbuild": "yarn tsc",
+    "db:migrate": "node_modules/.bin/sequelize db:migrate --migrations-compiled-path src/db/migrations",
     "test": "jest --detectOpenHandles --coverage"
   },
   "devDependencies": {
@@ -31,10 +32,11 @@
     "@types/sequelize": "^4.28.4",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
+    "parse-database-url": "^0.3.0",
     "pg": "^7.12.0",
     "pg-hstore": "^2.3.3",
     "reflect-metadata": "^0.1.13",
-    "sequelize": "^5.12.3"
+    "sequelize": "^5.1.0"
   },
   "engines": {
     "yarn": "1.x"
