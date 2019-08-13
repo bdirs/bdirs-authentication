@@ -3,7 +3,7 @@
 .DS_Store*
 Icon?
 ._*
-
+.vscode-janus-debug
 # Windows
 Thumbs.db
 ehthumbs.db
