@@ -1,1 +1,5 @@
-// it will contain all interfaces we shall use
+import { IUserType } from "./user.type";
+
+export {
+  IUserType
+}
