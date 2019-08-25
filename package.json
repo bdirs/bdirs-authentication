@@ -9,14 +9,17 @@
     "start": "node dist/index.js",
     "start:dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
     "heroku-prebuild": "yarn install && yarn db:migrate",
-    "heroku-postbuild": "yarn tsc",
+    "heroku-postbuild": "yarn clean && yarn tsc",
     "db:migrate": "node_modules/.bin/sequelize db:migrate --migrations-compiled-path src/db/migrations",
-    "test": "jest --detectOpenHandles --coverage"
+    "test": "jest --detectOpenHandles --coverage",
+    "clean": "rm -rf dist/"
   },
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/express": "^4.17.0",
     "@types/jest": "^24.0.16",
     "@types/supertest": "^2.0.8",
+    "@types/uuid": "^3.4.5",
     "coveralls": "^3.0.5",
     "jest": "^24.8.0",
     "nodemon": "^1.19.1",
@@ -31,7 +34,9 @@
   "dependencies": {
     "@hapi/joi": "^15.1.1",
     "@sentry/node": "^5.5.0",
+    "@types/dotenv": "^6.1.1",
     "@types/sequelize": "^4.28.4",
+    "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
@@ -40,7 +45,8 @@
     "pg": "^7.12.0",
     "pg-hstore": "^2.3.3",
     "reflect-metadata": "^0.1.13",
-    "sequelize": "^5.1.0"
+    "sequelize": "^5.1.0",
+    "uuid": "^3.3.3"
   },
   "engines": {
     "yarn": "1.x"

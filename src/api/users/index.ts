@@ -1,18 +1,18 @@
-import { Router } from 'express';
+import { Router } from "express";
 
 import {
   validateRequestBody,
-} from '../../middleware/validators';
-import { user } from './User.controller';
+} from "../../middleware";
+import { userController } from "./user-controller";
 
 const router = Router();
 
 router.post(
-  '/login',
+  "/login",
   validateRequestBody,
-  user.loginUser.bind(user),
+  userController.loginUser.bind(userController),
 );
 
-router.get('/', user.findAllRecords.bind(user));
+router.get("/", userController.findAllRecords.bind(userController));
 
 export default router;
