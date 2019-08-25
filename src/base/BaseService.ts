@@ -11,7 +11,7 @@ export default class BaseService<T> implements IService<T> {
   }
   /**
    * @param  {T} data
-   * @param  {object={}} options
+   * @param options
    * @returns Promise
    */
   public async createOne(data: T, options: object = {}): Promise<T> {
@@ -20,8 +20,8 @@ export default class BaseService<T> implements IService<T> {
   }
 
   /**
-   * @param  {object={}} options
    * @returns Promise
+   * @param options
    */
   public async findAll(options: object = {}): Promise<any> {
     const result = await this.model.findAll(options);
@@ -29,8 +29,8 @@ export default class BaseService<T> implements IService<T> {
   }
 
   /**
-   * @param  {object={}} options
    * @returns Promise
+   * @param options
    */
   public async findOne(options: object): Promise<T> {
     const result = await this.model.findOne({
@@ -40,8 +40,8 @@ export default class BaseService<T> implements IService<T> {
   }
 
   /**
-   * @param  {object={}} options
    * @returns Promise
+   * @param options
    */
   public async deleteOne(options: object): Promise<boolean> {
 
@@ -54,7 +54,7 @@ export default class BaseService<T> implements IService<T> {
 
 /**
  * @param  {object} data
- * @param  {object={}} options
+ * @param options
  * @returns Promise
  */
   public async updateOne(data: object, options: object): Promise<any> {

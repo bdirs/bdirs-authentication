@@ -1,7 +1,7 @@
+import bcrypt from "bcryptjs";
 import supertest from "supertest";
-import bcrypt from 'bcryptjs';
 import app from "../app";
-import { userService } from "../services/UserService";
+import { userService } from "../services/user-service";
 
 interface UserData {
   password: string;
@@ -21,16 +21,16 @@ export const deleteAllUserRecords = async (): Promise<void> => {
 };
 
 export class App {
-  static token = null;
-  static app = supertest(app);
+  public static token = null;
+  public static app = supertest(app);
 
-  static __addAuthorization(request) {
+  public static __addAuthorization(request) {
     return this.token
-      ? request.set('authorization', `Bearer ${this.token}`)
+      ? request.set("authorization", `Bearer ${this.token}`)
       : request;
   }
 
-  static post(url) {
+  public static post(url) {
     const request = this.app.post(url);
 
     return App.__addAuthorization(request);

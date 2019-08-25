@@ -1,1 +1,5 @@
-// All scripts executed on application will be here
+import StartUpHelper from "./startup.loader";
+
+export {
+  StartUpHelper,
+};
