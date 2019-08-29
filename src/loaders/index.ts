@@ -1,5 +1,1 @@
-import StartUpHelper from "./StartUpHelper";
-
-export {
-  StartUpHelper
-}
+// All scripts executed on application will be here

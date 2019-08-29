@@ -1,5 +1,1 @@
-import UserService from './UserService';
-
-export {
-  UserService
-}
+// will contain all our services that interact with database
