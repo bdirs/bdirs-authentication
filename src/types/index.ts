@@ -1,5 +1,1 @@
-import { IUserType } from "./user.type";
-
-export {
-  IUserType
-}
+// it will contain all interfaces we shall use
