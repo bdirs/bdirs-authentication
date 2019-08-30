@@ -4,14 +4,14 @@ import { IController } from "./interfaces/IController";
 import { IService } from "./interfaces/IService";
 
 export default class BaseController implements IController {
-  public modelName;
-  public service;
+  public service: any;
+  public modelName: string;
 
   /**
    * @param  {IService<any>} service
    * @param  {string} modelName
    */
-  constructor(service: IService<any>, modelName: string) {
+  constructor(service: any, modelName: string) {
     this.service = service;
     this.modelName = modelName;
   }
@@ -38,7 +38,7 @@ export default class BaseController implements IController {
    */
   public async findAllRecords(req: Request, res: Response) {
     const data = await this.service.findAll();
-    return HttpResponse.sendResponse(res, true, data);
+    return HttpResponse.sendResponse(res, true, 200, 'google', data);
   }
 
   /**
