@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/index.js",
-    "start:dev": "ts-node src/index.ts",
+    "start:dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
     "heroku-prebuild": "yarn install && yarn db:migrate",
     "heroku-postbuild": "yarn tsc",
     "db:migrate": "node_modules/.bin/sequelize db:migrate --migrations-compiled-path src/db/migrations",
@@ -19,6 +19,7 @@
     "@types/supertest": "^2.0.8",
     "coveralls": "^3.0.5",
     "jest": "^24.8.0",
+    "nodemon": "^1.19.1",
     "sequelize-cli-typescript": "^3.2.0-c",
     "sequelize-typescript": "^1.0.0-beta.3",
     "supertest": "^4.0.2",
@@ -28,10 +29,13 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
+    "@hapi/joi": "^15.1.1",
     "@sentry/node": "^5.5.0",
     "@types/sequelize": "^4.28.4",
-    "dotenv": "^8.0.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.1.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "parse-database-url": "^0.3.0",
     "pg": "^7.12.0",
     "pg-hstore": "^2.3.3",
