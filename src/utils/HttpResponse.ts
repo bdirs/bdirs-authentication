@@ -22,7 +22,6 @@ export default class HttpResponse {
     if (!message) {
       delete body.message;
     }
-    body.success = success || true;
     return response.status(statusCode || 200).send(body);
   }
 

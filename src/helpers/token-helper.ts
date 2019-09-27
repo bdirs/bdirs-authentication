@@ -11,4 +11,9 @@ export default class TokenHelper {
     const token =  jwt.sign(payload, SECRET_KEY, signature);
     return token;
   }
+
+  public static async decodeToken(token: string): Promise<any> {
+      const decoded = await jwt.verify(token, SECRET_KEY);
+      return decoded;
+  }
 }

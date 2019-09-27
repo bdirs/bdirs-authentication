@@ -1,14 +1,19 @@
 import { Request, Response } from "express";
+import uuid from "uuid";
 import BaseController from "../../base/BaseController";
-import { PasswordHelper, TokenHelper } from "../../helpers";
-import { userService } from "../../services";
+import { broadcastEvent } from "../../events";
+import {events} from "../../events/events-constants";
+import {
+  PasswordHelper,
+  TokenHelper,
+} from "../../helpers";
+import { userRolesService, userService } from "../../services";
 import { IUser } from "../../types";
+import { IRequest } from "../../types";
 import { HttpResponse, Validator } from "../../utils";
+import {roleNames} from "../../utils";
 
 export default class UserController extends BaseController {
-  constructor(service = userService, ModelN = "User") {
-    super(service, ModelN);
-  }
   /**
    * @param  {string} username
    * @param  {Response} res
@@ -31,20 +36,46 @@ export default class UserController extends BaseController {
   /**
    * @param  {Request} req
    * @param  {Response} res
-   * @returns @Promise<Response>
    */
-  public async loginUser(req: Request, res: Response): Promise<Response> {
+  public async loginUser(req: Request, res: Response) {
     const { username, password } = req.body;
     const verifiedUser = await this.validateUser(username, res) as IUser;
+    const {role: {name}} = await userRolesService.findOne({where: {userId: verifiedUser.id}});
     const matchedPassword = await PasswordHelper.comparePassword(password, verifiedUser.password);
-    const payload = { username: verifiedUser.username, email: verifiedUser.email };
+    const payload = {
+      username: verifiedUser.username,
+      email: verifiedUser.email,
+      role: name,
+      id: verifiedUser.id };
     const data = {
       ...payload,
       access_token: await TokenHelper.generateToken(payload),
     };
     return matchedPassword ?
       HttpResponse.sendResponse(res, true, 200, null, data) :
-      HttpResponse.sendResponse(res, false, 400, "username and passowrd don't match");
+      HttpResponse.sendResponse(res, false, 400,
+        "username and password don't match");
+  }
+  /**
+   * @param  {IRequest} req
+   * @param  {Response} res
+   * @returns @Promise
+   */
+  public async addAdmin(req: IRequest, res: Response): Promise<Response> {
+    try {
+      const { body, user: {username}} = req;
+      const {password} = body;
+      const data = {...body, password: await PasswordHelper.hashPassword(password), uuid: uuid()};
+      const user = await userService.createOne(data);
+      await userRolesService.createUserRole(roleNames.ADMIN, user.id);
+      const emailData = {...user.dataValues, password, addedBy: username};
+      broadcastEvent(events.NEW_ADD_ADMIN_REGISTRATION_EMAIL, emailData);
+      return HttpResponse.sendResponse(res, true, 200,
+        "Admin user created successfully", user);
+    } catch (e) {
+      return HttpResponse.sendErrorResponse(res, 500, "Something went wrong", e);
+    }
+
   }
 }
 

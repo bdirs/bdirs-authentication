@@ -1,10 +1,12 @@
 import app from "./app";
+import { PORT } from "./config";
 import { StartUpHelper } from "./loaders";
 
-const port = process.env.PORT || 3000;
-
+const port = PORT || 4000;
 app.listen(port, async () => {
     await StartUpHelper.createAdmin();
-    // tslint:disable-next-line:no-console
+    // TODO improve on this functionality
+    // StartUpHelper.loadSentry();
+    StartUpHelper.loadEvents();
     console.log(`Running on ${port}`);
 });

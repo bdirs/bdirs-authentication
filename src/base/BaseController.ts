@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { HttpResponse } from "../utils";
 import { IController } from "./interfaces/IController";
-import { IService } from "./interfaces/IService";
 
 export default class BaseController implements IController {
   public service: any;
@@ -38,7 +37,7 @@ export default class BaseController implements IController {
    */
   public async findAllRecords(req: Request, res: Response) {
     const data = await this.service.findAll();
-    return HttpResponse.sendResponse(res, true, 200, 'google', data);
+    return HttpResponse.sendResponse(res, true, 200, null, data);
   }
 
   /**

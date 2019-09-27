@@ -1,12 +1,15 @@
 import * as Joi from "@hapi/joi";
-import { IUser } from "../../../types";
 
-export const userSchema = (data: IUser) => {
-  const schema = {
+export const userSchema = {
     password: Joi.string()
     // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)
     .required(),
     username: Joi.string().required(),
-  };
-  return Joi.validate(data, schema, { abortEarly: false });
+};
+
+export const addAdminSchema = {
+  roleId: Joi.number().required(),
+  username: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().required(),
 };

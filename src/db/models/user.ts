@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     uuid: DataTypes.STRING,
   }, {});
   User.associate = (models) => {
-    // associations can be defined here
+    User.hasMany(models.UserRole, {foreignKey: "userId", as: "userRoles"});
   };
 
   return User;
