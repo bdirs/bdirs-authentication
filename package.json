@@ -12,7 +12,9 @@
     "heroku-postbuild": "yarn clean && yarn tsc",
     "db:migrate": "node_modules/.bin/sequelize db:migrate --migrations-compiled-path src/db/migrations",
     "test": "jest --detectOpenHandles --coverage",
-    "clean": "rm -rf dist/"
+    "clean": "rm -rf dist/",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -51,9 +53,11 @@
     "pg-hstore": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^5.1.0",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "snyk": "^1.230.5"
   },
   "engines": {
     "yarn": "1.x"
-  }
+  },
+  "snyk": true
 }
