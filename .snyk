@@ -6,3 +6,7 @@ patch:
   SNYK-JS-HTTPSPROXYAGENT-469131:
     - '@sentry/node > https-proxy-agent':
         patched: '2019-10-04T04:39:47.944Z'
+    - snyk > proxy-agent > https-proxy-agent:
+        patched: '2019-10-05T04:40:50.112Z'
+    - snyk > proxy-agent > pac-proxy-agent > https-proxy-agent:
+        patched: '2019-10-05T04:40:50.112Z'
