@@ -12,9 +12,7 @@
     "heroku-postbuild": "yarn clean && yarn tsc",
     "db:migrate": "node_modules/.bin/sequelize db:migrate --migrations-compiled-path src/db/migrations",
     "test": "jest --detectOpenHandles --coverage",
-    "clean": "rm -rf dist/",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "clean": "rm -rf dist/"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
