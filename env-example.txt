@@ -1,0 +1,6 @@
+SUPER_ADMIN_EMAIL="adminpassword"
+SUPER_ADMIN_PASSWORD="password"
+SECRET_KEY="secretkey"
+EMAIL_USER="admin@admin.com"
+EMAIL_PASSWORD="admin."
+DATABASE_URL=postgresql://username@host/bdirs_dev

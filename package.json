@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/cors": "^2.8.6",
     "@types/express": "^4.17.0",
     "@types/jest": "^24.0.16",
     "@types/node": "^12.7.5",
@@ -42,6 +43,7 @@
     "@types/sequelize": "^4.28.4",
     "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -51,8 +53,8 @@
     "pg-hstore": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^5.1.0",
-    "uuid": "^3.3.3",
-    "snyk": "^1.230.5"
+    "snyk": "^1.230.5",
+    "uuid": "^3.3.3"
   },
   "engines": {
     "yarn": "1.x"
