@@ -1,5 +1,5 @@
 
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 
 const saltRounds = 10;
 export default class PasswordHelper {
