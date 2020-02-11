@@ -18,11 +18,11 @@ export interface IRequest extends Request {
 
 export default class UserController extends BaseController {
   /**
-   * @param  {string} username
+   * @param  {Request} req
    * @param  {Response} res
-   * @returns Promise<any>
    */
-  public async validateUser(username: string, res: Response): Promise<any> {
+  public async loginUser(req: Request, res: Response) {
+    const { username, password } = req.body;
     const user: IUser  = Validator.validateEmail(username) ?
       await userService.findOne({where: {email: username}}) :
       await userService.findOne({where: {username}});
@@ -34,21 +34,15 @@ export default class UserController extends BaseController {
         "user with that username doesn't exist",
       );
     }
-    return user;
-  }
-  /**
-   * @param  {Request} req
-   * @param  {Response} res
-   */
-  public async loginUser(req: Request, res: Response) {
-    const { username, password } = req.body;
-    const verifiedUser = await this.validateUser(username, res) as IUser;
-    const matchedPassword = await PasswordHelper.comparePassword(password, verifiedUser.password);
+
+    const matchedPassword = await PasswordHelper.comparePassword(password, user.password);
+
     const payload = {
-      username: verifiedUser.username,
-      email: verifiedUser.email,
-      role: verifiedUser.role,
-      id: verifiedUser.id };
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      id: user.id };
+
     const data = {
       ...payload,
       access_token: await TokenHelper.generateToken(payload),
@@ -58,6 +52,7 @@ export default class UserController extends BaseController {
       HttpResponse.sendResponse(res, false, 400,
         "username and password don't match");
   }
+
   /**
    * @param  {IRequest} req
    * @param  {Response} res
