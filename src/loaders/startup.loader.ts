@@ -9,14 +9,13 @@ import {
 import { registerEvents } from "../events";
 import { PasswordHelper } from "../helpers";
 import {
-  roleService,
-  userRolesService,
   userService,
 } from "../services";
 
 export default class StartUpHelper {
 
   public static async createAdmin(): Promise<void> {
+    // Move to migrartion
     if (!SUPER_ADMIN_EMAIL
       || !SUPER_ADMIN_PASSWORD) {
        throw new Error("Missing SUPER_ADMIN_EMAIL or SUPER_ADMIN_PASSWORD in env ");
@@ -25,8 +24,8 @@ export default class StartUpHelper {
     const options = {
       defaults: {
         email: SUPER_ADMIN_EMAIL,
-        isAdmin: true,
         password,
+        role: "admin",
         username: "SuperAdmin",
         uuid: uuid()},
       where: {
@@ -34,9 +33,7 @@ export default class StartUpHelper {
         username: "SuperAdmin",
         },
     };
-    const {dataValues: { id: userId } } = await userService.findOrCreate(options);
-    const {id: roleId} = await roleService.findOne({where: {name: "superAdmin"}});
-    await userRolesService.findOrCreate({ where: { userId, roleId } });
+    await userService.findOrCreate(options);
 }
   /**
    * @returns void

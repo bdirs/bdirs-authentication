@@ -1,6 +1,5 @@
-const fs = require("fs");
-const path = require("path");
-const Sequelize = require("sequelize");
+import path from "path";
+import { Sequelize } from "sequelize";
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 import { databaseConfig as conf } from "../../config";
@@ -8,32 +7,16 @@ import { databaseConfig as conf } from "../../config";
 const config = conf[env];
 const db = {
   sequelize: null,
+  // tslint:disable-next-line:object-literal-sort-keys
   Sequelize: null,
 };
 
-let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  db.sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else if (config.use_env_variable && env === "test") {
+  db.sequelize = new Sequelize("sqlite::memory:");
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+  db.sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter((file) => {
-    return (file.indexOf(".") !== 0) && (file !== basename) && (file.slice(-3) === ".js" || file.slice(-3) === ".ts");
-  })
-  .forEach((file) => {
-    const model = sequelize.import(path.join(__dirname, file));
-    db[model.name] = model;
-  });
-
-Object.keys(db).forEach((modelName) => {
-  if (db[modelName]) {
-    db[modelName].associate(db);
-  }
-});
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-module.exports = db;
+export  { db };

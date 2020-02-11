@@ -1,6 +1,6 @@
 import * as nodemailer from "nodemailer";
 import { EMAIL_PASSWORD, EMAIL_USER } from "../config";
-import {IEmailOptions} from "../types";
+import { IEmailOptions } from "../helpers/email-helper";
 
 export default class EmailService {
   constructor(

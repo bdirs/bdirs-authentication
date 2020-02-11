@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { JoiValidator } from ".";
-import { addAdminSchema, userSchema } from "./Joi/schemas/users";
+import { JoiHelper } from "../helpers";
+import { addAdminSchema, userSchema } from "./schemas/users";
 
 export const validateRequestBody = (req: Request, res: Response, next: NextFunction) => {
-  return JoiValidator.validateRequestBody(
+  return JoiHelper.validateRequestBody(
     req,
     res,
     next,
@@ -12,7 +12,7 @@ export const validateRequestBody = (req: Request, res: Response, next: NextFunct
 };
 
 export const validateCreateAdmin = (req: Request, res: Response, next: NextFunction) => {
-  return JoiValidator.validateRequestBody(
+  return JoiHelper.validateRequestBody(
     req,
     res,
     next,

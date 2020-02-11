@@ -22,12 +22,12 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      isAdmin: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      role: {
+        type: Sequelize.STRING,
+        defaultValue: "user",
       },
       uuid: {
-        type: Sequelize.STRING
+        type: Sequelize.UUID
       },
       createdAt: {
         allowNull: false,

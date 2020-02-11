@@ -1,6 +1,12 @@
 import {emailService} from "../services";
-import {IEmailOptions} from "../types";
 
+export interface IEmailOptions {
+  from: string;
+  to: string;
+  subject: string;
+  text?: string;
+  html?: string;
+}
 
 export interface IAdminEmail {
   email: string;

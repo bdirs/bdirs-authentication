@@ -1,12 +1,13 @@
-import { Model } from "sequelize-typescript";
+import { CreateOptions, FindOptions, FindOrCreateOptions, UpdateOptions } from "sequelize";
 import { IService } from "./interfaces/IService";
+import { WhereOptions } from "sequelize";
 
 export default class BaseService<T> implements IService<T> {
   public model;
   /**
    * @param  {Model} model
    */
-  constructor(model: Model) {
+  constructor(model) {
     this.model = model;
   }
   /**
@@ -14,7 +15,7 @@ export default class BaseService<T> implements IService<T> {
    * @param options
    * @returns Promise
    */
-  public async createOne(data: T, options: object = {}): Promise<T> {
+  public async createOne(data: T, options?: CreateOptions): Promise<T> {
     const result = await this.model.create({ ...data, ...options });
     return result;
   }
@@ -23,7 +24,7 @@ export default class BaseService<T> implements IService<T> {
    * @returns Promise
    * @param options
    */
-  public async findAll(options: object = {}): Promise<any> {
+  public async findAll(options: FindOptions): Promise<T[]> {
     const result = await this.model.findAll(options);
     return result;
   }
@@ -32,7 +33,7 @@ export default class BaseService<T> implements IService<T> {
    * @returns Promise
    * @param options
    */
-  public async findOne(options: object): Promise<T> {
+  public async findOne(options: FindOptions): Promise<T> {
     const result = await this.model.findOne({
         ...options,
     });
@@ -43,7 +44,7 @@ export default class BaseService<T> implements IService<T> {
    * @returns Promise
    * @param options
    */
-  public async deleteOne(options: object): Promise<boolean> {
+  public async deleteOne(options: WhereOptions): Promise<boolean> {
 
     const result = await this.model.destroy({
         ...options,
@@ -57,7 +58,7 @@ export default class BaseService<T> implements IService<T> {
  * @param options
  * @returns Promise
  */
-  public async updateOne(data: object, options: object): Promise<any> {
+  public async updateOne(data: T, options: UpdateOptions): Promise<any> {
 
     const results = await this.model.update(
       {...data}, {...options} );
@@ -69,7 +70,7 @@ export default class BaseService<T> implements IService<T> {
    * @param  {object} options
    * @returns Promise
    */
-  public async findOrCreate(options: object): Promise<any> {
+  public async findOrCreate(options: FindOrCreateOptions): Promise<{dataValues: T, isNewRecord: boolean}> {
     const [result] = await this.model.findOrCreate({...options});
     const { dataValues, _options: {isNewRecord} } = result;
     return  { dataValues, isNewRecord };

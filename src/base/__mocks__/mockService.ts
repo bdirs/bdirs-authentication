@@ -1,9 +1,9 @@
 // tslint:disable-next-line: no-var-requires
-const models = require("../../db/models");
+import { User } from "../../db/models/user";
+import { IUser } from "../../services/user-service";
 import BaseService from "../BaseService";
-const { User } = models;
 
-class MockService extends BaseService<any> {
+class MockService extends BaseService<IUser> {
   constructor() {
     super(User);
   }
