@@ -1,6 +1,5 @@
-import { IEmailOptions } from "../../types/email-type";
+import { IEmailOptions } from "../../helpers/email-helper";
 import {emailService} from "../email-service";
-
 
 export const options: IEmailOptions = {
       to: "",

@@ -1,15 +1,79 @@
+import { DataTypes, Model } from "sequelize";
+import uuidv4 from "uuid/v4";
+import { db } from ".";
+import { PasswordHelper } from "../../helpers";
 
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define("User", {
-    username: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    isAdmin: DataTypes.BOOLEAN,
-    uuid: DataTypes.STRING,
-  }, {});
-  User.associate = (models) => {
-    User.hasMany(models.UserRole, {foreignKey: "userId", as: "userRoles"});
-  };
+export type Role = "user" | "admin";
 
-  return User;
-};
+export const roles = ["user", "admin"];
+
+export class User extends Model {
+  public password?: string;
+ }
+
+User.init({
+  email: {
+    allowNull: false,
+    type: DataTypes.STRING,
+    validate: {
+      isEmail: {
+        msg: "Email is required",
+      },
+      notNull: {
+        msg: "A role must be provided",
+      },
+    },
+  },
+id: {
+  autoIncrement: true,
+  primaryKey: true,
+  type: DataTypes.INTEGER,
+},
+username: {
+  allowNull: false,
+  type: DataTypes.STRING,
+  validate: {
+    notNull: {
+      msg: "A username must be provided",
+    },
+  },
+},
+password: {
+  allowNull: false,
+  type: DataTypes.STRING,
+  validate: {
+    notNull: {
+      msg: "A password must be provided",
+    },
+  },
+},
+role: {
+  allowNull: false,
+  type: DataTypes.STRING,
+  validate: {
+    isIn: {
+      args: [roles],
+      msg: `Role must be in ${roles.join(",")}`,
+    },
+    notNull: {
+      msg: "A role must be provided",
+    },
+
+  },
+},
+  uuid: {
+    defaultValue: () => uuidv4(),
+    type: DataTypes.UUID,
+  },
+createdAt: {
+  type: DataTypes.DATE,
+},
+updatedAt: {
+  type: DataTypes.DATE,
+},
+}, {tableName: "Users", sequelize: db.sequelize});
+
+User.beforeCreate(async (user, options) => {
+  const hashedPassword = await PasswordHelper.hashPassword(user.password);
+  user.password = hashedPassword;
+});

@@ -1,5 +1,5 @@
+import { IRequest } from "../../api/users/user-controller";
 import { TokenHelper } from "../../helpers";
-import { IRequest } from "../../types";
 import { HttpResponse, roleNames } from "../../utils";
 import { isAuthenticated, isSuperAdmin } from "../authentication-middleware";
 

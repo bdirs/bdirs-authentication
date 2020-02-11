@@ -1,8 +1,8 @@
 import { Response } from "express";
 import { PasswordHelper, TokenHelper } from "../../../helpers";
-import { userRolesService, userService } from "../../../services";
-import { IRequest } from "../../../types";
+import {  userService } from "../../../services";
 import { HttpResponse } from "../../../utils/";
+import { IRequest } from "../user-controller";
 
 export const mockUser = {id: 1, username: "dee", password: "random"};
 //TODO add supertest tests
@@ -44,6 +44,5 @@ describe("UserController", () => {
     jest.spyOn(userService, "createOne").mockResolvedValueOnce({id: 1,
       username: "dee", dataValues: {email: "email@test.com", password: "passwoed"},
      email: "email@test.com", password: "passwoed"});
-    jest.spyOn(userRolesService, "createUserRole");
   });
 });

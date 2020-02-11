@@ -7,11 +7,14 @@ import {
   PasswordHelper,
   TokenHelper,
 } from "../../helpers";
-import { userRolesService, userService } from "../../services";
-import { IUser } from "../../types";
-import { IRequest } from "../../types";
+import { userService } from "../../services";
+import {IUser} from "../../services/user-service";
 import { HttpResponse, Validator } from "../../utils";
 import {roleNames} from "../../utils";
+
+export interface IRequest extends Request {
+  user: IUser;
+}
 
 export default class UserController extends BaseController {
   /**
@@ -28,7 +31,7 @@ export default class UserController extends BaseController {
         res,
         false,
         400,
-        "user with that username doesnot exist",
+        "user with that username doesn't exist",
       );
     }
     return user;
@@ -40,12 +43,11 @@ export default class UserController extends BaseController {
   public async loginUser(req: Request, res: Response) {
     const { username, password } = req.body;
     const verifiedUser = await this.validateUser(username, res) as IUser;
-    const {role: {name}} = await userRolesService.findOne({where: {userId: verifiedUser.id}});
     const matchedPassword = await PasswordHelper.comparePassword(password, verifiedUser.password);
     const payload = {
       username: verifiedUser.username,
       email: verifiedUser.email,
-      role: name,
+      role: verifiedUser.role,
       id: verifiedUser.id };
     const data = {
       ...payload,
@@ -67,7 +69,6 @@ export default class UserController extends BaseController {
       const {password} = body;
       const data = {...body, password: await PasswordHelper.hashPassword(password), uuid: uuid()};
       const user = await userService.createOne(data);
-      await userRolesService.createUserRole(roleNames.ADMIN, user.id);
       const emailData = {...user.dataValues, password, addedBy: username};
       broadcastEvent(events.NEW_ADD_ADMIN_REGISTRATION_EMAIL, emailData);
       return HttpResponse.sendResponse(res, true, 200,

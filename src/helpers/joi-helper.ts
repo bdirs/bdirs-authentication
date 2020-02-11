@@ -1,7 +1,7 @@
 import * as Joi from "@hapi/joi";
 import { NextFunction, Request, Response } from "express";
 
-export default class JoiValidator {
+export default class JoiHelper {
   /**
    * @param  {Request} req
    * @param  {Response} res

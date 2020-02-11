@@ -1,12 +1,12 @@
 import { Request } from "express";
-import { roleService, userService } from "../../services";
-import { IUser } from "../../types";
+import { userService } from "../../services";
+import { IUser } from "../../services/user-service";
 import { HttpResponse } from "../../utils";
-import { validateRoleExistence, validateUserExistence } from "../existence-middleware";
+import { validateUserExistence } from "../existence-middleware";
 
 const req = {
-    headers: {},
     body: {},
+    headers: {},
 } as Request;
 let res;
 const next = jest.fn();
@@ -18,24 +18,6 @@ describe("Existence Middleware", () => {
               send: jest.fn(),
             })).mockReturnValue({send: jest.fn()}),
           };
-    });
-
-    describe("Role Existence", () => {
-        it("should send response if role doesnot exist", async () => {
-            req.body.roleId = 1;
-            jest.spyOn(roleService, "findOne").mockResolvedValueOnce(null);
-            await validateRoleExistence(req, res, next);
-            expect(HttpResponse.sendResponse).toBeCalledWith(res, false, 404, "Role Not Found");
-
-        });
-
-        it("should call next if role exists", async () => {
-            req.body.roleId = 1;
-            jest.spyOn(roleService, "findOne").mockResolvedValueOnce({});
-            await validateRoleExistence(req, res, next);
-            expect(next).toBeCalled();
-
-        });
     });
 
     describe("User Existence", () => {

@@ -1,20 +1,6 @@
 import {NextFunction, Request, Response} from "express";
-import {roleService, userService} from "../services";
+import { userService} from "../services";
 import {HttpResponse} from "../utils";
-
-/**
- * @param  {Request} req
- * @param  {Response} res
- * @param  {NextFunction} next
- */
-export const validateRoleExistence = async (req: Request, res: Response, next: NextFunction) => {
-  const {body: {roleId}} = req;
-  const role = await roleService.findOne({where: {id: roleId}});
-  if (!role) {
-    return HttpResponse.sendResponse(res, false, 404, "Role Not Found");
-  }
-  next();
-};
 
 /**
  * @param  {Request} req

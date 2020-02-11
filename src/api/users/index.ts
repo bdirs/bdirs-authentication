@@ -5,7 +5,6 @@ import {
   isSuperAdmin,
   validateCreateAdmin,
   validateRequestBody,
-  validateRoleExistence,
   validateUserExistence,
 } from "../../middleware";
 import { userController } from "./user-controller";
@@ -23,7 +22,6 @@ router.post(
   isAuthenticated,
   isSuperAdmin,
   validateCreateAdmin,
-  validateRoleExistence,
   validateUserExistence,
   userController.addAdmin.bind(userController),
   );
