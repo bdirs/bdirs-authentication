@@ -1,14 +1,17 @@
 import { CreateOptions, FindOptions, FindOrCreateOptions, UpdateOptions } from "sequelize";
-import { IService } from "./interfaces/IService";
 import { WhereOptions } from "sequelize";
+import { IService } from "./interfaces/IService";
 
 export default class BaseService<T> implements IService<T> {
   public model;
+  protected excludedFields?: [];
   /**
    * @param  {Model} model
+   * @param excludedFields
    */
-  constructor(model) {
+  constructor(model, excludedFields?) {
     this.model = model;
+    this.excludedFields = excludedFields;
   }
   /**
    * @param  {T} data
@@ -23,19 +26,23 @@ export default class BaseService<T> implements IService<T> {
   /**
    * @returns Promise
    * @param options
+   * @param exclude
    */
-  public async findAll(options: FindOptions): Promise<T[]> {
-    const result = await this.model.findAll(options);
+  public async findAll(options: FindOptions, exclude?: boolean): Promise<T[]> {
+    const result = await this.model.findAll({...options, attributes:
+        {exclude: exclude && [...this.excludedFields]}});
     return result;
   }
 
   /**
    * @returns Promise
    * @param options
+   * @param exclude
    */
-  public async findOne(options: FindOptions): Promise<T> {
+  public async findOne(options: FindOptions, exclude?: boolean): Promise<T> {
     const result = await this.model.findOne({
         ...options,
+      attributes: {exclude: exclude && [...this.excludedFields]},
     });
     return result;
   }

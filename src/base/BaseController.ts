@@ -78,10 +78,10 @@ export default class BaseController implements IController {
   public async updateRecord(req: Request, res: Response) {
     const { params: { id }, body }  = req;
     const options = { where: { id } };
+    console.log(body, options);
     const result = await this.service.updateOne(body, options);
 
     return res.json({
-      data: result,
       message: `${this.modelName} updated successfully`,
       success: true,
     });

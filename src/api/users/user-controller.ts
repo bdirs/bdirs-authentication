@@ -25,8 +25,8 @@ export default class UserController extends BaseController {
   public async loginUser(req: Request, res: Response) {
     const { username, password } = req.body;
     const user: IUser  = Validator.validateEmail(username) ?
-      await userService.findOne({where: {email: username}}) :
-      await userService.findOne({where: {username}});
+      await userService.findOne({where: {email: username}}, false) :
+      await userService.findOne({where: {username}}, false);
     if (!user) {
       return HttpResponse.sendResponse(
         res,
@@ -42,7 +42,10 @@ export default class UserController extends BaseController {
       username: user.username,
       email: user.email,
       role: user.role,
-      id: user.id };
+      id: user.id,
+      uuid: user.uuid,
+      avatar: user.avatar
+    };
 
     const data = {
       ...payload,
@@ -77,7 +80,7 @@ export default class UserController extends BaseController {
 
   public async resetPasswordRequest(req: Request, res: Response): Promise<Response> {
     const{body: { email } } = req;
-    const user = await this.service.findOne({ where: { email }, exclude: ["password"] });
+    const user = await this.service.findOne({ where: { email }});
     let token: string;
     if (user) {
       token = await TokenHelper.generateToken({email, id: user.id});
@@ -93,12 +96,12 @@ export default class UserController extends BaseController {
       const {email} = await TokenHelper.decodeToken(req.params.token);
       const user = await this.service.findOne({where: {email}});
       if (!user) {
-        return HttpResponse.sendErrorResponse(res, 404, "User not Found", null);
+        return HttpResponse.sendErrorResponse(res, 404, "User not Found", Error("User not Found"));
       }
       const{ body: { password: newPassword, passwordConfirmation } } = req;
       if (newPassword !== passwordConfirmation) {
         return HttpResponse.sendErrorResponse(res, 400,
-          "Password and password confirmation must match", null);
+          "Password and password confirmation must match", Error("Password and password confirmation must match"));
       }
       const password = await PasswordHelper.hashPassword(newPassword);
       await this.service.updateOne({ password }, {where: { email } });
@@ -107,6 +110,20 @@ export default class UserController extends BaseController {
       return HttpResponse.sendErrorResponse(res, 500,
         "There is a problem with the link. Password reset couldn't be completed", e);
     }
+  }
+
+  public async findOneRecord(req: Request, res: Response): Promise<Response> {
+    const{params: {uuid: userUuid}} = req;
+    const user = await this.service.findOne({where: {uuid: userUuid}}, true);
+    if (!user) {
+      return HttpResponse.sendErrorResponse(res, 404, "User not Found", Error("User Not Found"));
+    }
+    return  HttpResponse.sendResponse(res, true, 200, null, user);
+  }
+
+  public async me(req: IRequest, res: Response): Promise<Response> {
+    const{user} = req;
+    return  HttpResponse.sendResponse(res, true, 200, null, user);
   }
 }
 
