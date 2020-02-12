@@ -1,4 +1,5 @@
 import { Response } from "express";
+import uuid from "uuid";
 import { PasswordHelper, TokenHelper } from "../../../helpers";
 import * as helpers from  "../../../helpers";
 import {  userService } from "../../../services";
@@ -73,7 +74,7 @@ describe("UserController", () => {
       jest.spyOn(userController.service, "findOne").mockResolvedValue(null);
       jest.spyOn(HttpResponse, "sendErrorResponse");
       await userController.resetPasswordConfirmation(req, res);
-      expect(HttpResponse.sendErrorResponse).toHaveBeenCalledWith(res, 404, "User not Found", null);
+      expect(HttpResponse.sendErrorResponse).toHaveBeenCalledWith(res, 404, "User not Found", Error("User not Found"));
     });
 
     it("should send error response if password and passwordConfirmation don't match", async () => {
@@ -86,14 +87,14 @@ describe("UserController", () => {
         passwordConfirmation: "passwo1",
       };
       await userController.resetPasswordConfirmation(req, res);
-      expect(HttpResponse.sendErrorResponse).toHaveBeenCalledWith(res, 400, "Password and password confirmation must match", null);
+      expect(HttpResponse.sendErrorResponse).toHaveBeenCalledWith(res, 400, "Password and password confirmation must match", Error("Password and password confirmation must match"));
     });
 
     it("should update user successfully", async () => {
       jest.spyOn(TokenHelper, "decodeToken").mockResolvedValue(mockUser);
       jest.spyOn(userController.service, "findOne").mockResolvedValue(mockUser);
       jest.spyOn(HttpResponse, "sendResponse");
-      jest.spyOn(userController.service, "updateOne").mockResolvedValue(1)
+      jest.spyOn(userController.service, "updateOne").mockResolvedValue(1);
       req.body = {
         ...req.body,
         password: "password",
@@ -101,6 +102,34 @@ describe("UserController", () => {
       };
       await userController.resetPasswordConfirmation(req, res);
       expect(HttpResponse.sendResponse).toHaveBeenCalled();
+    });
+  });
+
+  describe("FindOne", () => {
+    req.params = {
+      uuid: uuid.v4(),
+    };
+    it("should return existing user", async () => {
+      jest.spyOn(userController.service, "findOne").mockResolvedValue(mockUser);
+      jest.spyOn(HttpResponse, "sendResponse");
+      await userController.findOneRecord(req, res);
+      expect(HttpResponse.sendResponse).toHaveBeenCalledWith(res, true, 200, null, mockUser);
+    });
+
+    it("should return 404 if user doesn't exist", async () => {
+      jest.spyOn(userController.service, "findOne").mockResolvedValue(null);
+      jest.spyOn(HttpResponse, "sendErrorResponse");
+      await userController.findOneRecord(req, res);
+      expect(HttpResponse.sendErrorResponse).toHaveBeenCalledWith(res, 404, "User not Found", Error("User Not Found"));
+    });
+  });
+
+  describe("Me", () => {
+    it("should return current user profile", async () => {
+      req.user = mockUser;
+      jest.spyOn(HttpResponse, "sendResponse");
+      await userController.me(req, res);
+      expect(HttpResponse.sendResponse).toHaveBeenCalledWith(res, true, 200, null, mockUser);
     });
   });
 });

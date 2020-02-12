@@ -1,7 +1,7 @@
-import { DataTypes, Model } from "sequelize";
+import {DataTypes, Model} from "sequelize";
 import uuidv4 from "uuid/v4";
-import { db } from ".";
-import { PasswordHelper } from "../../helpers";
+import {db} from ".";
+import {PasswordHelper} from "../../helpers";
 
 export type Role = "user" | "admin";
 
@@ -65,6 +65,10 @@ role: {
     defaultValue: () => uuidv4(),
     type: DataTypes.UUID,
   },
+  avatar: {
+    allowNull: true,
+    type: DataTypes.TEXT,
+  },
 createdAt: {
   type: DataTypes.DATE,
 },
@@ -74,6 +78,5 @@ updatedAt: {
 }, {tableName: "Users", sequelize: db.sequelize});
 
 User.beforeCreate(async (user, options) => {
-  const hashedPassword = await PasswordHelper.hashPassword(user.password);
-  user.password = hashedPassword;
+  user.password = await PasswordHelper.hashPassword(user.password);
 });

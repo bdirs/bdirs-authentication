@@ -1,4 +1,3 @@
-// tslint:disable-next-line:no-var-requires
 import { errors } from "celebrate";
 import cors from "cors";
 import express, { Request, Response } from "express";
