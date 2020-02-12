@@ -10,6 +10,7 @@ export const EMAIL_PASSWORD: string = process.env.EMAIL_PASSWORD;
 export const NODE_ENV: string = process.env.NODE_ENV || "development";
 export const PORT: number = Number(process.env.PORT);
 export const DSN: string = "https://5ed302e0f47d4935ad60ce898f3ff79a@sentry.io/1521028";
+export const FRONT_END_URL: string = process.env.FRONT_END_URL || "http://localhost:4000";
 
 export const databaseConfig = {
   development: {

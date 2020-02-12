@@ -1,16 +1,17 @@
-import { Request, Response } from "express";
+import { Request, Response} from "express";
 import uuid from "uuid";
 import BaseController from "../../base/BaseController";
+import { FRONT_END_URL } from "../../config";
 import { broadcastEvent } from "../../events";
-import {events} from "../../events/events-constants";
+import { events } from "../../events/events-constants";
 import {
   PasswordHelper,
+  sendPasswordResetEmail,
   TokenHelper,
 } from "../../helpers";
 import { userService } from "../../services";
-import {IUser} from "../../services/user-service";
+import { IUser } from "../../services/user-service";
 import { HttpResponse, Validator } from "../../utils";
-import {roleNames} from "../../utils";
 
 export interface IRequest extends Request {
   user: IUser;
@@ -72,6 +73,40 @@ export default class UserController extends BaseController {
       return HttpResponse.sendErrorResponse(res, 500, "Something went wrong", e);
     }
 
+  }
+
+  public async resetPasswordRequest(req: Request, res: Response): Promise<Response> {
+    const{body: { email } } = req;
+    const user = await this.service.findOne({ where: { email }, exclude: ["password"] });
+    let token: string;
+    if (user) {
+      token = await TokenHelper.generateToken({email, id: user.id});
+      const resetUrl: string = `${FRONT_END_URL}/password/${token}/confirmation`;
+      await sendPasswordResetEmail({email: user.email, link: resetUrl});
+    }
+    return  HttpResponse.sendResponse(res, true, 200,
+      `Password Reset Link was Sent to Your email. Please check ${email} inbox for further instructions`);
+  }
+
+  public async resetPasswordConfirmation(req: Request, res: Response) {
+    try {
+      const {email} = await TokenHelper.decodeToken(req.params.token);
+      const user = await this.service.findOne({where: {email}});
+      if (!user) {
+        return HttpResponse.sendErrorResponse(res, 404, "User not Found", null);
+      }
+      const{ body: { password: newPassword, passwordConfirmation } } = req;
+      if (newPassword !== passwordConfirmation) {
+        return HttpResponse.sendErrorResponse(res, 400,
+          "Password and password confirmation must match", null);
+      }
+      const password = await PasswordHelper.hashPassword(newPassword);
+      await this.service.updateOne({ password }, {where: { email } });
+      return HttpResponse.sendResponse(res, true, 500, "Password updated successfully");
+    } catch (e) {
+      return HttpResponse.sendErrorResponse(res, 500,
+        "There is a problem with the link. Password reset couldn't be completed", e);
+    }
   }
 }
 

@@ -1,13 +1,16 @@
 import { Response } from "express";
 import { PasswordHelper, TokenHelper } from "../../../helpers";
+import * as helpers from  "../../../helpers";
 import {  userService } from "../../../services";
 import { HttpResponse } from "../../../utils/";
-import { IRequest } from "../user-controller";
+import { IRequest, userController } from "../user-controller";
 
-export const mockUser = {id: 1, username: "dee", password: "random"};
-//TODO add supertest tests
+export const mockUser = {id: 1, username: "dee", password: "random", email: "email@test.com"};
+
+// TODO add supertest tests
+
 describe("UserController", () => {
-  const req = {} as IRequest;
+  const req = {params: {}} as IRequest;
   const res =  {} as Response;
   beforeEach(() => {
     res.status = jest.fn().mockReturnValue({send: jest.fn()});
@@ -44,5 +47,60 @@ describe("UserController", () => {
     jest.spyOn(userService, "createOne").mockResolvedValueOnce({id: 1,
       username: "dee", dataValues: {email: "email@test.com", password: "passwoed"},
      email: "email@test.com", password: "passwoed"});
+  });
+
+  describe("PasswordReset", () => {
+    req.body = { email: mockUser.email };
+    req.params.token = "token";
+    it("should send password reset email", async () => {
+      jest.spyOn(userController.service, "findOne").mockResolvedValue(mockUser);
+      jest.spyOn(helpers, "sendPasswordResetEmail").mockResolvedValue();
+      jest.spyOn(TokenHelper, "generateToken").mockResolvedValue("token");
+      jest.spyOn(HttpResponse, "sendResponse");
+      await userController.resetPasswordRequest(req, res);
+      expect(helpers.sendPasswordResetEmail).toBeCalled();
+      expect(HttpResponse.sendResponse).toBeCalled();
+    });
+
+    it("should not send password reset email is user doesn't exist", async () => {
+      jest.spyOn(userController.service, "findOne").mockResolvedValue(null);
+      await userController.resetPasswordRequest(req, res);
+      expect(helpers.sendPasswordResetEmail).not.toBeCalled();
+    });
+
+    it("should send error response if user doesn't exist", async () => {
+      jest.spyOn(TokenHelper, "decodeToken").mockResolvedValue(mockUser);
+      jest.spyOn(userController.service, "findOne").mockResolvedValue(null);
+      jest.spyOn(HttpResponse, "sendErrorResponse");
+      await userController.resetPasswordConfirmation(req, res);
+      expect(HttpResponse.sendErrorResponse).toHaveBeenCalledWith(res, 404, "User not Found", null);
+    });
+
+    it("should send error response if password and passwordConfirmation don't match", async () => {
+      jest.spyOn(TokenHelper, "decodeToken").mockResolvedValue(mockUser);
+      jest.spyOn(userController.service, "findOne").mockResolvedValue(mockUser);
+      jest.spyOn(HttpResponse, "sendErrorResponse");
+      req.body = {
+        ...req.body,
+        password: "password",
+        passwordConfirmation: "passwo1",
+      };
+      await userController.resetPasswordConfirmation(req, res);
+      expect(HttpResponse.sendErrorResponse).toHaveBeenCalledWith(res, 400, "Password and password confirmation must match", null);
+    });
+
+    it("should update user successfully", async () => {
+      jest.spyOn(TokenHelper, "decodeToken").mockResolvedValue(mockUser);
+      jest.spyOn(userController.service, "findOne").mockResolvedValue(mockUser);
+      jest.spyOn(HttpResponse, "sendResponse");
+      jest.spyOn(userController.service, "updateOne").mockResolvedValue(1)
+      req.body = {
+        ...req.body,
+        password: "password",
+        passwordConfirmation: "password",
+      };
+      await userController.resetPasswordConfirmation(req, res);
+      expect(HttpResponse.sendResponse).toHaveBeenCalled();
+    });
   });
 });
