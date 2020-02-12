@@ -1,4 +1,5 @@
-import {emailService} from "../services";
+import { emailService } from "../services";
+import { EMAIL_USER } from "../config";
 
 export interface IEmailOptions {
   from: string;
@@ -14,10 +15,15 @@ export interface IAdminEmail {
   password: string;
   addedBy: string;
 }
+
+export interface IPasswordResetEmail {
+  email: string;
+  link: string;
+}
 export const sendAdminConfirmationEmail = async (data: IAdminEmail): Promise<void> => {
   const {email, username, password, addedBy} = data;
   const options: IEmailOptions = {
-    from: "aggrey256@gmail.com",
+    from: EMAIL_USER,
     subject: "ADMIN REGISTRATION EMAIL",
     to: email,
     html:
@@ -31,6 +37,24 @@ export const sendAdminConfirmationEmail = async (data: IAdminEmail): Promise<voi
       <p><strong>Password</strong>: ${password}</p>
       Thank You;
     `,
+  };
+  await emailService.sendMail(options);
+};
+
+export const sendPasswordResetEmail = async (data: IPasswordResetEmail): Promise<void> => {
+  const{email, link} = data;
+
+  const options: IEmailOptions = {
+    from: EMAIL_USER,
+    subject: "PASSWORD RESET EMAIL",
+    to: email,
+    html:
+    `
+    ${link}
+    <p>Hey ${email} you recently requested a password reset to this email</p>
+    <p>If so please click the link to reset your password</p>
+    <p>If you didnot request a password reset please ignore this email and click here to let us know</p>
+    <p>Thank you for being part of the family</p>`,
   };
   await emailService.sendMail(options);
 };

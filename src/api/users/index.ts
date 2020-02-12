@@ -1,3 +1,4 @@
+import {celebrate, Joi, Segments} from "celebrate";
 import { Router } from "express";
 
 import {
@@ -7,14 +8,14 @@ import {
   validateRequestBody,
   validateUserExistence,
 } from "../../middleware";
-import { userController } from "./user-controller";
+import {IRequest, userController} from "./user-controller";
 
 const router = Router();
 
 router.post(
   "/login",
   validateRequestBody,
-  userController.loginUser.bind(userController),
+  (req, res, next) => userController.loginUser(req, res),
 );
 
 router.post(
@@ -23,12 +24,33 @@ router.post(
   isSuperAdmin,
   validateCreateAdmin,
   validateUserExistence,
-  userController.addAdmin.bind(userController),
+  (req: IRequest, res, next) => userController.addAdmin(req, res),
   );
 
 router.get(
   "/",
-  userController.findAllRecords.bind(userController),
+  (req, res, next) => userController.findAllRecords(req, res),
   );
+
+router.post(
+  "/password-request",
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      email: Joi.string().required().email(),
+    }),
+  }),
+  (req, res, next) => userController.resetPasswordRequest(req, res),
+);
+
+router.patch(
+  "/password/:token/confirmation",
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      password: Joi.string().required(),
+      passwordConfirmation: Joi.string().required(),
+    }),
+  }),
+  (req, res, next) => userController.resetPasswordConfirmation(req, res),
+);
 
 export default router;

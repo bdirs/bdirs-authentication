@@ -1,4 +1,5 @@
 // tslint:disable-next-line:no-var-requires
+import { errors } from "celebrate";
 import cors from "cors";
 import express, { Request, Response } from "express";
 import userRouters from "./api/users";
@@ -11,9 +12,24 @@ app.use(cors());
 
 app.use(`${apiPrefix}/users`, userRouters);
 
-app.use("/", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
   return res.json({
     message: "Welcome To BDIRS",
   });
 });
+
+app.use("*", (req: Request, res: Response) => {
+  return res.status(404).send({
+    message: "Not Found",
+  });
+});
+
+app.use((err: Error, req: Request, res: Response) => {
+  return res.status(500).send({
+    message: err.message || "Internal Server Error",
+  });
+});
+
+app.use(errors());
+
 export default app;

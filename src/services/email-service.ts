@@ -1,7 +1,7 @@
 import * as nodemailer from "nodemailer";
+import path from "path";
 import { EMAIL_PASSWORD, EMAIL_USER } from "../config";
 import { IEmailOptions } from "../helpers/email-helper";
-
 export default class EmailService {
   constructor(
     private readonly service?: string,
@@ -31,6 +31,6 @@ export default class EmailService {
   }
 
 }
-
 const emailService = new EmailService(null);
+
 export { emailService };
