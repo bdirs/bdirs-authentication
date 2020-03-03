@@ -2,7 +2,7 @@ import app from "./app";
 import { PORT } from "./config";
 import { StartUpHelper } from "./loaders";
 
-const port = PORT || 4000;
+const port = PORT || 5000;
 app.listen(port, async () => {
   // console.log(await UserService.prototype.findAll());
     // await StartUpHelper.createAdmin();

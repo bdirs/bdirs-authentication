@@ -44,7 +44,7 @@ export default class UserController extends BaseController {
       role: user.role,
       id: user.id,
       uuid: user.uuid,
-      avatar: user.avatar
+      avatar: user.avatar,
     };
 
     const data = {
