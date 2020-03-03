@@ -12,7 +12,8 @@
     "heroku-postbuild": "yarn clean && yarn tsc",
     "db:migrate": "node_modules/.bin/sequelize db:migrate --migrations-path ./src/db/migrations",
     "test": "jest --detectOpenHandles --coverage  --forceExit",
-    "clean": "rm -rf dist/"
+    "clean": "rm -rf dist/",
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "@sentry/node": "^5.5.0",
@@ -39,7 +40,6 @@
   },
   "dependencies": {
     "@hapi/joi": "^15.1.1",
-    "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
     "celebrate": "^11.0.1",
     "cors": "^2.8.5",
