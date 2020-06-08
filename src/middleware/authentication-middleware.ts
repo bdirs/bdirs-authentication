@@ -16,8 +16,8 @@ export const isAuthenticated = async (req: IRequest, res: Response, next: NextFu
     return HttpResponse.sendResponse(
       res,
       false,
-      400,
-      "Missing Authorization Header",
+      401,
+      "Not Authorised",
     );
   }
   try {
