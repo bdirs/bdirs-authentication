@@ -29,6 +29,8 @@ router.post(
 
 router.get(
   "/",
+  isAuthenticated,
+  isSuperAdmin,
   (req, res, next) => userController.findAllRecords(req, res),
   );
 
@@ -64,7 +66,7 @@ router.patch(
 );
 
 router.get(
-  "/me/profile",
+  "/profile/me",
   isAuthenticated,
   (req, res, next) => userController.me(req as IRequest, res),
 );
