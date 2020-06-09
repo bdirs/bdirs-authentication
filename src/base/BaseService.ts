@@ -30,7 +30,7 @@ export default class BaseService<T> implements IService<T> {
    */
   public async findAll(options: FindOptions, exclude?: boolean): Promise<T[]> {
     const result = await this.model.findAll({...options, attributes:
-        {exclude: exclude && [...this.excludedFields]}});
+        {exclude: exclude ? [...this.excludedFields] : []}});
     return result;
   }
 
