@@ -8,7 +8,7 @@ module.exports = {
         username: "admin",
         email: process.env.SUPER_ADMIN_EMAIL,
         password: await bcrypt.hashSync(process.env.SUPER_ADMIN_PASSWORD),
-        role: "admin",
+        role: "superAdmin",
         createdAt: new Date(),
         updatedAt: new Date(),
         uuid: uuid()

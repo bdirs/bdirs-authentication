@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
+import { FindOptions } from "sequelize";
+import { IUser } from "../services/user-service";
 import { HttpResponse } from "../utils";
 import { IController } from "./interfaces/IController";
+import { paginationHelper } from "../helpers/pagination-helper";
 
 export default class BaseController implements IController {
   public service: any;
@@ -36,8 +39,24 @@ export default class BaseController implements IController {
    * @returns {response}
    */
   public async findAllRecords(req: Request, res: Response) {
-    const data = await this.service.findAll();
-    return HttpResponse.sendResponse(res, true, 200, null, data);
+    const{page, pageSize} = req.query;
+    let options: FindOptions = {};
+    const itemsPerPage = Number(pageSize) || 25;
+
+    if (!page) {
+      const results = await this.service.findAll(options);
+      return HttpResponse.sendResponse(res, true, 200, null, results);
+    }
+    if (page) {
+      const offset = Number(page) > 0 ? Number(page) - 1 : 0 * itemsPerPage;
+      const limit = Number(pageSize);
+      options = {offset, limit};
+    }
+
+    const data = await this.service.model.findAndCountAll(options);
+    const response = paginationHelper(data, Number(page), itemsPerPage);
+
+    return HttpResponse.sendResponse(res, true, 200, null, {...response});
   }
 
   /**

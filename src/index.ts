@@ -4,7 +4,6 @@ import { StartUpHelper } from "./loaders";
 
 const port = PORT || 5000;
 app.listen(port, async () => {
-  // console.log(await UserService.prototype.findAll());
     // await StartUpHelper.createAdmin();
     // TODO improve on this functionality
     // StartUpHelper.loadSentry();

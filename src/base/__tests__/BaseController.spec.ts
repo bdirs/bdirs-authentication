@@ -15,6 +15,7 @@ describe("BaseController", () => {
     };
     req = {
       params: {},
+      query: {},
     };
   });
   it("should findAllRecords", async () => {
