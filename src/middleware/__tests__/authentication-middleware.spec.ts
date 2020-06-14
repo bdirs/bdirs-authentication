@@ -33,7 +33,7 @@ describe("authentication-middleware", () => {
         it("should sendResponse error if authorization is missing", async () => {
             req.headers.authorization = null;
             await isAuthenticated(req, res, next);
-            expect(HttpResponse.sendResponse).toBeCalledWith(res, false, 400, "Missing Authorization Header");
+            expect(HttpResponse.sendResponse).toBeCalledWith(res, false, 401, "Not Authorised");
         });
 
         it("should send error if token is invalid", async () => {
