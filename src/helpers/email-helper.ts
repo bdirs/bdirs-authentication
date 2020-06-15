@@ -43,7 +43,6 @@ export const sendAdminConfirmationEmail = async (data: IAdminEmail): Promise<voi
 
 export const sendPasswordResetEmail = async (data: IPasswordResetEmail): Promise<void> => {
   const{email, link} = data;
-
   const options: IEmailOptions = {
     from: EMAIL_USER,
     subject: "PASSWORD RESET EMAIL",

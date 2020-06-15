@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { FindOptions } from "sequelize";
+import { paginationHelper } from "../helpers/pagination-helper";
 import { IUser } from "../services/user-service";
 import { HttpResponse } from "../utils";
 import { IController } from "./interfaces/IController";
-import { paginationHelper } from "../helpers/pagination-helper";
 
 export default class BaseController implements IController {
   public service: any;

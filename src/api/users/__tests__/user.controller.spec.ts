@@ -1,8 +1,7 @@
 import { Response } from "express";
 import uuid from "uuid";
-import { PasswordHelper, TokenHelper } from "../../../helpers";
-import * as helpers from  "../../../helpers";
-import {  userService } from "../../../services";
+import * as helpers from "../../../helpers";
+import { userService } from "../../../services";
 import { HttpResponse } from "../../../utils/";
 import { IRequest, userController } from "../user-controller";
 
@@ -35,13 +34,13 @@ describe("UserController", () => {
   it("login user if password match", async () => {
     const mockData = {access_token: "token", email: undefined, username: "dee"};
     req.body = {username: "SuperAdmin", password: "password"};
-    jest.spyOn(PasswordHelper, "comparePassword").mockResolvedValue(true);
-    jest.spyOn(TokenHelper, "generateToken").mockResolvedValue("token");
+    jest.spyOn(helpers.PasswordHelper, "comparePassword").mockResolvedValue(true);
+    jest.spyOn(helpers.TokenHelper, "generateToken").mockResolvedValue("token");
   });
 
   it("should throw error if password doesnot match", async () => {
     req.body = {username: "SuperAdmin", password: "password"};
-    jest.spyOn(PasswordHelper, "comparePassword").mockResolvedValue(false);
+    jest.spyOn(helpers.PasswordHelper, "comparePassword").mockResolvedValue(false);
   });
 
   it("should successfully add admin user", async () => {
@@ -51,12 +50,16 @@ describe("UserController", () => {
   });
 
   describe("PasswordReset", () => {
+    jest.mock("../../../helpers/email-helper.ts", () => ({
+      sendPasswordResetEmail: jest.fn(),
+    }));
+
     req.body = { email: mockUser.email };
     req.params.token = "token";
     it("should send password reset email", async () => {
       jest.spyOn(userController.service, "findOne").mockResolvedValue(mockUser);
-      jest.spyOn(helpers, "sendPasswordResetEmail").mockResolvedValue();
-      jest.spyOn(TokenHelper, "generateToken").mockResolvedValue("token");
+      jest.spyOn(helpers, "sendPasswordResetEmail");
+      jest.spyOn(helpers.TokenHelper, "generateToken").mockResolvedValue("token");
       jest.spyOn(HttpResponse, "sendResponse");
       await userController.resetPasswordRequest(req, res);
       expect(helpers.sendPasswordResetEmail).toBeCalled();
@@ -70,7 +73,7 @@ describe("UserController", () => {
     });
 
     it("should send error response if user doesn't exist", async () => {
-      jest.spyOn(TokenHelper, "decodeToken").mockResolvedValue(mockUser);
+      jest.spyOn(helpers.TokenHelper, "decodeToken").mockResolvedValue(mockUser);
       jest.spyOn(userController.service, "findOne").mockResolvedValue(null);
       jest.spyOn(HttpResponse, "sendErrorResponse");
       await userController.resetPasswordConfirmation(req, res);
@@ -78,7 +81,7 @@ describe("UserController", () => {
     });
 
     it("should send error response if password and passwordConfirmation don't match", async () => {
-      jest.spyOn(TokenHelper, "decodeToken").mockResolvedValue(mockUser);
+      jest.spyOn(helpers.TokenHelper, "decodeToken").mockResolvedValue(mockUser);
       jest.spyOn(userController.service, "findOne").mockResolvedValue(mockUser);
       jest.spyOn(HttpResponse, "sendErrorResponse");
       req.body = {
@@ -91,7 +94,7 @@ describe("UserController", () => {
     });
 
     it("should update user successfully", async () => {
-      jest.spyOn(TokenHelper, "decodeToken").mockResolvedValue(mockUser);
+      jest.spyOn(helpers.TokenHelper, "decodeToken").mockResolvedValue(mockUser);
       jest.spyOn(userController.service, "findOne").mockResolvedValue(mockUser);
       jest.spyOn(HttpResponse, "sendResponse");
       jest.spyOn(userController.service, "updateOne").mockResolvedValue(1);

@@ -15,6 +15,7 @@ module.exports = {
   test: {
     url: process.env.DATABASE_URL,
     use_env_variable: "DATABASE_URL",
+    logging: false,
   },
   production: {
     url: process.env.DATABASE_URL,

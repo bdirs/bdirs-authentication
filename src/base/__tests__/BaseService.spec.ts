@@ -1,6 +1,5 @@
 import { User } from "../../db/models/user";
 import mockService from "../__mocks__/mockService";
-import { db } from "../../db/models";
 
 const mock = {id: 1, username: "Dee", password: "passwird", email: "email", role: "user"};
 describe("BaseService", () => {
