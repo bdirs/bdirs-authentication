@@ -8,6 +8,9 @@ import { IRequest, userController } from "../user-controller";
 
 export const mockUser = {id: 1, username: "dee", password: "random", email: "email@test.com"};
 
+jest.mock("../../../helpers/email-helper", () => ({
+  sendPasswordResetEmail: jest.fn(),
+}));
 // TODO add supertest tests
 
 describe("UserController", () => {
